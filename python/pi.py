@@ -20,8 +20,8 @@ def pi(n = 1000, internal = False, draw = False):
             y = masked_array(r[:,1:2], mask=~inside)
             plot(x.compressed(), y.compressed(),'.r')
     except MemoryError: # divide and conquer
-        print '** reducing sample count to %d' % int(n/10)
-        (n, nk) = array([ pi(n = n / 10, internal = True, fig = fig) for i in range(10) ]).sum(0)
+        print '** reducing sample count to %d' % int(n/100)
+        (n, nk) = array([ pi(n = n / 1E2, internal = True ) for i in range(int(1E2)) ]).sum(0)
     
     if internal:
         return (n, nk)
