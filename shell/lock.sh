@@ -7,35 +7,39 @@
 # 
 # 
 
+LOCK=/usr/local/bin/i3lock
+XMM=/usr/bin/xmodmap
+GREP=/bin/grep
+
 add="/tmp/mmadd$$.tmp"
 del="/tmp/mmdel$$.tmp"
 
 # generate scripts for add and for remove alt from keycodes
-xmodmap -pke | grep -i alt | while read line; do 
+$XMM -pke | $GREP -i alt | while read line; do 
     echo "$line" >> $add
     echo "$(expr "$line" : '\(keycode\s\+[0-9]\+\)\s\+.*') =" >> $del
 done
 
 # lock the screen
-i3lock $@
+$LOCK $@
 
 # delete the mapping
-xmodmap $del
+$XMM $del
 rm $del
 
 # should be empty
-xmodmap -pke | grep -i alt
+$XMM -pke | grep -i alt
 
 # fork this to reassign alt to keycodes after i3lock dissapear
 while true; do 
-    if pgrep i3lock > /dev/null; then 
+    if pgrep i3lock > /dev/null; then
         false # nop
     else 
         # do the stuff and break the loop
-        xmodmap $add 
+        $XMM $add 
         rm $add
         # alt should be back
-        xmodmap -pke | grep -i alt
+        $XMM -pke | grep -i alt
         break
     fi
     sleep 1
