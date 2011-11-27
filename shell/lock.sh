@@ -10,6 +10,7 @@
 LOCK=/usr/local/bin/i3lock
 XMM=/usr/bin/xmodmap
 GREP=/bin/grep
+PGREP=/usr/bin/pgrep
 
 add="/tmp/mmadd$$.tmp"
 del="/tmp/mmdel$$.tmp"
@@ -28,20 +29,19 @@ $XMM $del
 rm $del
 
 # should be empty
-$XMM -pke | grep -i alt
+$XMM -pke | $GREP -i alt
 
 # fork this to reassign alt to keycodes after i3lock dissapear
 while true; do 
-    if pgrep i3lock > /dev/null; then
+    if $PGREP i3lock > /dev/null; then
         false # nop
     else 
         # do the stuff and break the loop
         $XMM $add 
         rm $add
         # alt should be back
-        $XMM -pke | grep -i alt
+        $XMM -pke | $GREP -i alt
         break
     fi
     sleep 1
 done &
-
