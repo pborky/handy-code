@@ -25,6 +25,6 @@ def flip(f):
 def minkowski(center, point, n):
     """ minkowski metric demostration """
     rpow = flip(pow)
-    pow_to_n = partial(rpow,n)
-    pow_to_1n = partial(rpow,1./n)
-    return pow_to_n(reduce(add, map(com(pow_to_1n,sub),center,point)))
+    nth_power = partial(rpow,n)
+    nth_root = partial(rpow,1./n)
+    return nth_root(reduce(add, map(com(nth_power,sub),center,point)))
