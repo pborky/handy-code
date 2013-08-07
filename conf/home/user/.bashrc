@@ -133,6 +133,13 @@ preexec () {
         return
     fi
     export lastcmd=$BASH_COMMAND;
+    case "$TERM" in
+        xterm*|rxvt*|screen*)
+            echo -e "\e]0;[$lastcmd]\a"
+            ;;
+        *)
+            ;;
+    esac
 }
 postexec () {
     laststatus="$?"
