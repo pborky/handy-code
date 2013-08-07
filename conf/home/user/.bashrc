@@ -57,9 +57,15 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\e[1;34m\]\u\[\e[m\]\[\e[0;34m\]@\[\e[m\]\[\e[1;34m\]\h\[\e[m\] \[\e[1;37m\]\w\[\e[m\] \[\e[1;32m\]$\[\e[m\] '
+    PS1='${debian_chroot:+($debian_chroot)}\[\e[1;34m\]\u\[\e[m\]\[\e[0;34m\]@\[\e[m\]\[\e[1;34m\]\h\[\e[m\] \[\e[1;37m\]\w\[\e[m\] '
+    ## if user is root use red color
+    if [[ $EUID -ne 0 ]]; then
+        PS1='$PS1\[\e[1;31m\]$\[\e[m\] '
+    else
+        PS1='$PS1\[\e[1;32m\]$\[\e[m\] '
+    fi
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w \$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -135,7 +141,7 @@ preexec () {
     export lastcmd=$BASH_COMMAND;
     case "$TERM" in
         xterm*|rxvt*|screen*)
-            echo -n -e "\e]0;[$lastcmd]\a"
+            echo -n -e "\e]0;${debian_chroot:+($debian_chroot)}$USER@$HOSTNAME: $PWD [$lastcmd]\a"
             ;;
         *)
             ;;
