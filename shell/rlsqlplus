@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ -z "$1" -o "$1" == "-h" ]; then 
+    echo 'Usage: rlsqlplus <logon> [<start>]'
+    echo '       <logon> : USER[/PASSWD]@TNSNAME'
+    echo '       <start> : SQL script path'
+    exit 1
+fi
+
+LOGON="$1"
+
+if [ ! -z "$2" ]; then
+    START="@ $2"
+else
+    START=""
+fi
+
+LOGON2=(${LOGON//@/ })
+LOGON3=(${LOGON2[0]//// })
+
+DB_USER=${LOGON3[0]}
+DB_PASSWD=${LOGON3[1]}
+DB_CONNECT=${LOGON2[1]}
+
+WRAP="rlwrap -H $HOME/.sqlplus_history -D 2"
+SQLPLUS="/opt/oracle/instantclient_12_2/sqlplus -L"
+
+if id $DB_USER > /dev/null; then 
+    echo $WRAP sudo -u $DB_USER $SQLPLUS "$LOGON" "$START"
+    $WRAP sudo -u $DB_USER $SQLPLUS "$LOGON" "$START"
+else
+    echo $WRAP $SQLPLUS "$LOGON" "$START"
+    $WRAP $SQLPLUS "$LOGON" "$START"
+fi
+
