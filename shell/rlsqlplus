@@ -22,10 +22,10 @@ DB_USER=${LOGON3[0]}
 DB_PASSWD=${LOGON3[1]}
 DB_CONNECT=${LOGON2[1]}
 
-WRAP="rlwrap -H $HOME/.sqlplus_history -D 2"
+WRAP="rlwrap -H $HOME/.sqlplus_history -D 2 -m"
 SQLPLUS="/opt/oracle/instantclient_12_2/sqlplus -L"
 
-if id $DB_USER > /dev/null; then 
+if id $DB_USER > /dev/null 2>&1 ; then 
     echo $WRAP sudo -u $DB_USER $SQLPLUS "$LOGON" "$START"
     $WRAP sudo -u $DB_USER $SQLPLUS "$LOGON" "$START"
 else
